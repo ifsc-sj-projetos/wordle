@@ -23,7 +23,7 @@ public class Grid extends JPanel {
 
 		for (int i = 0; i < CHANCES; i++) {
 			for (int j = 0; j < WORD_LENGTH; j++) {
-				cells[i][j] = new JLabel("A");
+				cells[i][j] = new JLabel();
 				cells[i][j].setBackground(Color.BLACK);
 				cells[i][j].setOpaque(true);
 				cells[i][j].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));

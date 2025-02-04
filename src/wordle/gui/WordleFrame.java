@@ -1,7 +1,9 @@
 package wordle.gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.*;
 
 public class WordleFrame extends JFrame {
 
@@ -11,6 +13,10 @@ public class WordleFrame extends JFrame {
 	private Grid grid;
 	private Keyboard keyboard;
 	private JTextField inputField;
+
+	private final int PADDING = 20;
+	private final Font input = new Font("Helvetica", Font.BOLD, 44);
+
 
 	public WordleFrame() {
 		setTitle("Wordle");
@@ -24,20 +30,24 @@ public class WordleFrame extends JFrame {
 		grid = new Grid(WORD_LENGTH, CHANCES);
 		keyboard = new Keyboard(this);
 
-		inputField = new JTextField(5);
+		inputField = new JTextField("WORDLE", 5);
 		inputField.setHorizontalAlignment(JTextField.CENTER);
-		JButton submitButton = new JButton("Enter");
+		inputField.setBackground(Color.BLACK);
+		inputField.setForeground(Color.WHITE);
+		inputField.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+		inputField.setCaretColor(Color.BLACK);
+		inputField.setFont(input);
+
 
 		JPanel inputPanel = new JPanel();
+		inputPanel.setBackground(Color.BLACK);
+		inputPanel.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
 		inputPanel.add(inputField);
-		inputPanel.add(submitButton);
 
 
 		add(grid, BorderLayout.CENTER);
 		add(keyboard, BorderLayout.SOUTH);
 		add(inputPanel, BorderLayout.NORTH);
-
-//		pack();
 
 	}
 
