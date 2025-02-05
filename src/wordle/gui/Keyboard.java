@@ -3,18 +3,20 @@ package wordle.gui;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Keyboard extends JPanel {
 
-	private HashMap<Character, JLabel>[] keys;
-	private JPanel[] rows;
+	private final HashMap<Character, JLabel>[] keys;
+	private final JPanel[] rows;
 
+	// variáveis de estilo
 	private final int PADDING = 20;
 	private final Font buttonFont = new Font("Helvetica", Font.BOLD, 16);
+	private final Color GREEN = new Color(1,154,1);
+	private final Color YELLOW = new Color(255,196,37);
 
-	public Keyboard(WordleFrame frame) {
+	public Keyboard() {
 
 		setLayout(new GridLayout(3,1));
 		setBackground(Color.BLACK);
@@ -39,7 +41,7 @@ public class Keyboard extends JPanel {
 				JLabel button = new JLabel(String.valueOf(letter));
 
 				button.setOpaque(true);
-				button.setBackground(Color.DARK_GRAY);
+				button.setBackground(Color.GRAY);
 				button.setForeground(Color.WHITE);
 				button.setFont(buttonFont);
 
@@ -58,8 +60,31 @@ public class Keyboard extends JPanel {
 
 	}
 
-	public void updateKeys(String guess, Map<Integer, Character> feedback) {
-		System.out.println("update keyboard");
+	public void updateKeys(String guess, char[] feedback) {
+		final char green = 'o';
+		final char yellow = '%';
+		final char gray = 'x';
+
+		for (int i = 0; i < keys.length; i++) {
+			for (int j = 0; j < feedback.length; j++) {
+				Character letter = guess.charAt(j);
+				JLabel key = keys[i].get(letter);
+				if (key != null) {
+					switch (feedback[j]) {
+						case green:
+							key.setBackground(GREEN);
+							break;
+						case yellow:
+							key.setBackground(YELLOW);
+							break;
+						case gray:
+							key.setBackground(Color.DARK_GRAY);
+							break;
+					}
+				}
+			}
+
+		}
 	}
 
 }
