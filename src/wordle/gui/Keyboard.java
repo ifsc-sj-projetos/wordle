@@ -12,6 +12,7 @@ public class Keyboard extends JPanel {
 	private JPanel[] rows;
 
 	private final int PADDING = 20;
+	private final Font buttonFont = new Font("Helvetica", Font.BOLD, 16);
 
 	public Keyboard(WordleFrame frame) {
 
@@ -28,14 +29,24 @@ public class Keyboard extends JPanel {
 		rows = new JPanel[3];
 		for (int i = 0; i < rows.length; i++) {
 			rows[i] = new JPanel();
+			rows[i].setBackground(Color.BLACK);
 		}
 
 		String[] keyboardKeys = {"QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"};
 		for (int i = 0; i < keyboardKeys.length; i++) {
 			for (char letter : keyboardKeys[i].toCharArray()) {
+
 				JLabel button = new JLabel(String.valueOf(letter));
-				button.setBackground(Color.red);
-//				button.addActionListener(e -> frame.handleGuess(letter + ""));
+
+				button.setOpaque(true);
+				button.setBackground(Color.DARK_GRAY);
+				button.setForeground(Color.WHITE);
+				button.setFont(buttonFont);
+
+				button.setPreferredSize(new Dimension(30, 30));
+				button.setHorizontalAlignment(SwingConstants.CENTER);
+				button.setVerticalAlignment(SwingConstants.CENTER);
+
 				keys[i].put(letter, button);
 				rows[i].add(button);
 			}
