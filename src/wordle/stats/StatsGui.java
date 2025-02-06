@@ -9,6 +9,7 @@ import java.awt.event.*;
 public class StatsGui extends JFrame {
 
 	private final WordleFrame wordleFrame;
+	private final GameStats stats;
 
 	private final JPanel mainPanel;
 
@@ -30,6 +31,7 @@ public class StatsGui extends JFrame {
 
 	public StatsGui(boolean isWin, String answer, WordleFrame wordleFrame) {
 		this.wordleFrame = wordleFrame;
+		this.stats = new GameStats();
 
 		ImageIcon favicon = new ImageIcon("resources/favicon.png");
 		setIconImage(favicon.getImage());
@@ -128,14 +130,14 @@ public class StatsGui extends JFrame {
 		valueLabel.setBackground(Color.BLACK);
 		valueLabel.setOpaque(true);
 
-		JPanel descPanel = createMultiLineLabel(description);
+		JPanel descPanel = createDescPanel(description);
 		statsPanel.add(valueLabel);
 		statsPanel.add(descPanel);
 
 		return statsPanel;
 	}
 
-	private JPanel createMultiLineLabel(String text) {
+	private JPanel createDescPanel(String text) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -154,4 +156,9 @@ public class StatsGui extends JFrame {
 
 		return panel;
 	}
+
+	private void writeStats() {
+
+	}
+
 }
