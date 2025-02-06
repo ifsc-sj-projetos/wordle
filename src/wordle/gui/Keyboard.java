@@ -8,20 +8,27 @@ import java.util.*;
 public class Keyboard extends JPanel {
 
 	private final HashMap<Character, JLabel>[] keys;
+	private final HashSet<Character> keyHistory = new HashSet<>();
+
 	private final JPanel[] rows;
 
+	private final char green = 'o';
+	private final char yellow = '%';
+	private final char gray = 'x';
+
 	// variáveis de estilo
-	private final int PADDING = 20;
 	private final Font buttonFont = new Font("Helvetica", Font.BOLD, 16);
-	private final Color GREEN = new Color(1,154,1);
-	private final Color YELLOW = new Color(255,196,37);
+	private Color GREEN;
+	private Color YELLOW;
+	private Color DARK_GRAY;
+	private Color WINNER_GRAY;
 
 	public Keyboard() {
 
 		setLayout(new GridLayout(3,1));
 		setBackground(Color.BLACK);
 		setSize(400, 700);
-		setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+		setBorder(new EmptyBorder(20, 20, 20, 20));
 
 		keys = new HashMap[3];
 		for (int i = 0; i < keys.length; i++) {
@@ -60,31 +67,81 @@ public class Keyboard extends JPanel {
 
 	}
 
-	public void updateKeys(String guess, char[] feedback) {
-		final char green = 'o';
-		final char yellow = '%';
-		final char gray = 'x';
+	public void setColors(Color correct, Color positionRight, Color wrong, Color winner) {
+		GREEN = correct;
+		YELLOW = positionRight;
+		DARK_GRAY = wrong;
+		WINNER_GRAY = winner;
+	}
 
-		for (int i = 0; i < keys.length; i++) {
-			for (int j = 0; j < feedback.length; j++) {
-				Character letter = guess.charAt(j);
-				JLabel key = keys[i].get(letter);
-				if (key != null) {
-					switch (feedback[j]) {
-						case green:
-							key.setBackground(GREEN);
-							break;
-						case yellow:
-							key.setBackground(YELLOW);
-							break;
-						case gray:
-							key.setBackground(Color.DARK_GRAY);
-							break;
+	public void updateKeys(String guess, char[] feedback, int attempt, boolean isWin, boolean chancesOver) {
+
+		for (int i = 0; i < guess.length(); i++) {
+			keyHistory.add(guess.charAt(i));
+		}
+
+
+		if (isWin || chancesOver) {
+
+			for (HashMap<Character, JLabel> kbRow : keys) {
+				for (Character key : kbRow.keySet()) {
+
+					JLabel keyLabel = kbRow.get(key);
+
+					if (!keyHistory.contains(key)) {
+						keyLabel.setBackground(WINNER_GRAY);
+
+					} else {
+
+						if (isWin && guess.contains(key.toString())) {
+							keyLabel.setBackground(GREEN);
+						}
+
+						else if (!isWin && guess.contains(key.toString())) {
+							int index = guess.indexOf(key);
+							if (index != -1) {
+								readFeedback(feedback[index], keyLabel);
+							}
+						}
+
 					}
 				}
+
 			}
 
+		} else {
+			for (int j = 0; j < feedback.length; j++) {
+				Character letter = guess.charAt(j);
+				JLabel key = getKeyLabel(letter);
+				readFeedback(feedback[j], key);
+			}
 		}
 	}
+
+	private JLabel getKeyLabel(Character letter) {
+		for (HashMap<Character, JLabel> kbRow : keys) {
+			if (kbRow.containsKey(letter)) {
+				return kbRow.get(letter);
+			}
+		}
+		return null;
+	}
+
+	private void readFeedback(char feedback, JLabel key) {
+		if (key != null) {
+			switch (feedback) {
+				case green:
+					key.setBackground(GREEN);
+					break;
+				case yellow:
+					key.setBackground(YELLOW);
+					break;
+				case gray:
+					key.setBackground(DARK_GRAY);
+					break;
+			}
+		}
+	}
+
 
 }

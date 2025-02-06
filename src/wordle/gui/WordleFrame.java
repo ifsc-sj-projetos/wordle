@@ -17,16 +17,14 @@ public class WordleFrame extends JFrame {
 	// variáveis de conteúdo
 	private final Grid grid;
 	private final Keyboard keyboard;
-	private final JTextField inputField;
-	private final JLabel statusLabel;
+	private final Input input;
 
-	// variáveis de estilo
-	private final int PADDING = 20;
-	private final Font inputFont = new Font("Helvetica", Font.BOLD, 52);
-	private final Font statusFont = new Font("Helvetica", Font.PLAIN, 16);
+	// variáveis de cor
+	private final Color GREEN = new Color(1,154,1);
+	private final Color YELLOW = new Color(255,196,37);
+	private final Color DARK_GRAY = new Color(75,75,75);
+	private final Color WINNER_GRAY = new Color(30,30,30);
 
-	// valor que controla o placeholder do TextField.
-	private boolean cleared = false;
 
 	// TESTE
 	public int attempt = 0;
@@ -42,91 +40,21 @@ public class WordleFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		grid = new Grid(WORD_LENGTH, CHANCES);
+		grid = new Grid(WORD_LENGTH, CHANCES, 5);
+		grid.setColors(GREEN, YELLOW, DARK_GRAY, WINNER_GRAY);
+
 		keyboard = new Keyboard();
+		keyboard.setColors(GREEN, YELLOW, DARK_GRAY, WINNER_GRAY);
 
-		inputField = new JTextField("WORDLE", 10);
-		inputField.setHorizontalAlignment(JTextField.CENTER);
-		inputField.setBackground(Color.BLACK);
-		inputField.setForeground(Color.WHITE);
-		inputField.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-		inputField.setCaretColor(Color.BLACK);
-		inputField.setFont(inputFont);
-		inputField.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				clearText();
-				validateInput(e.getKeyCode());
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				clearText();
-				inputField.setText(inputField.getText().toUpperCase());
-				characterLimit();
-			}
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				clearText();
-			}
-		});
-
-		statusLabel = new JLabel();
-		statusLabel.setForeground(Color.RED);
-		statusLabel.setFont(statusFont);
-
-		JPanel inputPanel = new JPanel();
-		inputPanel.setBackground(Color.BLACK);
-		inputPanel.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
-		inputPanel.add(inputField);
-		inputPanel.add(statusLabel);
+		input = new Input(this, WORD_LENGTH);
 
 		add(grid, BorderLayout.CENTER);
 		add(keyboard, BorderLayout.SOUTH);
-		add(inputPanel, BorderLayout.NORTH);
+		add(input, BorderLayout.NORTH);
 
 	}
 
-	// limpa o placeholder
-	private void clearText() {
-		if (!cleared && inputField.getText().equals("WORDLE")) {
-			inputField.setText("");
-			cleared = true;
-		}
-	}
-
-	// checa o input do usuário quando o "Enter" é pressionado
-	private void validateInput(int key) {
-		if (key == 10) {
-			String input = inputField.getText().replace(" ", "");
-			boolean isAlpha = input.matches("[a-zA-Z]+");
-
-			if (input.length() == WORD_LENGTH && isAlpha) {
-				handleGuess(Util.strip(input));
-				inputField.setText("");
-			}
-
-			if (isAlpha) {
-				statusLabel.setText("");
-			} else {
-				statusLabel.setText("Apenas letras são permitidas.");
-				inputField.setText("");
-			}
-
-
-		}
-	}
-
-	// impede que o usuário insira mais que 5 letras
-	private void characterLimit() {
-		String input = inputField.getText().replace(" ","");
-		if (input.length() > WORD_LENGTH) {
-			inputField.setText(input.substring(0,WORD_LENGTH));
-		}
-	}
-
-	private void handleGuess(String guess) {
+	public void handleGuess(String guess) {
 				Random random = new Random();
 				char[] color = {'x', '%', 'o', 'x', 'x'};
 				char[] feedback = {
@@ -136,16 +64,20 @@ public class WordleFrame extends JFrame {
 						color[random.nextInt(color.length)],
 						color[random.nextInt(color.length)],
 				};
+				boolean[] bools = {true, false, false, false, false};
+				boolean isWin = bools[random.nextInt(bools.length)];
+				boolean chancesOver = attempt == CHANCES - 1;
 
-		grid.updateGrid(guess, feedback, attempt);
-		keyboard.updateKeys(guess, feedback);
+		grid.updateGrid(guess, feedback, attempt, isWin);
+		keyboard.updateKeys(guess, feedback, attempt, isWin, chancesOver);
 
-				if (attempt < CHANCES - 1) {
+				if (attempt < CHANCES - 1 && !isWin) {
 					attempt++;
 				} else {
-					inputField.setEnabled(false);
+					input.setEnabled(false);
 				}
 	}
+
 	public static void main(String[] args) {
 		WordleFrame wordleGame = new WordleFrame();
 		wordleGame.setVisible(true);
