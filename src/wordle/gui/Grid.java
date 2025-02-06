@@ -29,8 +29,8 @@ public class Grid extends JPanel {
 		setBackground(Color.BLACK);
 		setBorder(new EmptyBorder(50, 50, 50, 50));
 
-		for (int i = 0; i < CHANCES; i++) {
-			for (int j = 0; j < WORD_LENGTH; j++) {
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[0].length; j++) {
 
 				cells[i][j] = new JLabel();
 				cells[i][j].setHorizontalAlignment(SwingConstants.CENTER);
@@ -103,6 +103,16 @@ public class Grid extends JPanel {
 
 		}
 
+	}
+
+	public void resetGrid() {
+		for (JLabel[] cell : cells) {
+			for (int j = 0; j < cells[0].length; j++) {
+				cell[j].setBackground(Color.BLACK);
+				cell[j].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+				cell[j].setText("");
+			}
+		}
 	}
 
 }

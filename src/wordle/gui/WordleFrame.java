@@ -1,11 +1,9 @@
 package wordle.gui;
 
-import wordle.Util;
+import wordle.stats.StatsGui;
 
 import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.Random;
 
 public class WordleFrame extends JFrame {
@@ -75,7 +73,20 @@ public class WordleFrame extends JFrame {
 					attempt++;
 				} else {
 					input.setEnabled(false);
+					showStatsGui(isWin, "A palavra era " + guess.toUpperCase() + "!");
 				}
+	}
+
+	public void resetGame() {
+		attempt = 0;
+		grid.resetGrid();
+		keyboard.resetKeyboard();
+		input.setEnabled(true);
+	}
+
+	private void showStatsGui(boolean isWin, String answer) {
+		StatsGui statsGui = new StatsGui(isWin, answer, this);
+		statsGui.setVisible(true);
 	}
 
 	public static void main(String[] args) {

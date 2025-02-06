@@ -144,4 +144,13 @@ public class Keyboard extends JPanel {
 	}
 
 
+	public void resetKeyboard() {
+		for (HashMap<Character, JLabel> kbRow : keys) {
+			for (Character key : kbRow.keySet()) {
+				kbRow.get(key).setBackground(Color.GRAY);
+			}
+		}
+	}
+
+
 }
