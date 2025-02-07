@@ -20,7 +20,8 @@ public class GameStats {
 
         gamesPlayed = random.nextInt(50);
         gamesWon = random.nextInt(gamesPlayed);
-        victoryPercent = (gamesWon / gamesPlayed) * 100;
+        float percent = ((float) gamesWon / gamesPlayed) * 100;
+        victoryPercent = (int) percent;
 
         int a = random.nextInt(10);
         int b = random.nextInt(10);

@@ -18,7 +18,7 @@ public class Input extends JPanel {
 	private final Font inputFont = new Font("Helvetica", Font.BOLD, 52);
 
 	// valor que controla o placeholder do TextField.
-	private boolean cleared = false;
+	protected boolean cleared = false;
 
 	public Input(WordleFrame frame, int WORD_LENGTH) {
 		this.WORD_LENGTH = WORD_LENGTH;
@@ -101,6 +101,11 @@ public class Input extends JPanel {
 
 	public void setEnabled(boolean bool) {
 		inputField.setEnabled(bool);
+	}
+
+	public void setText(String str) {
+		inputField.setText(str);
+		inputField.setForeground(Color.WHITE);
 	}
 
 }

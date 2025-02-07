@@ -25,7 +25,7 @@ public class StatsGui extends JFrame {
 	private final Font TITLE_FONT = new Font("Helvetica", Font.BOLD, 36);
 	private final Font ANSWER_FONT = new Font("Helvetica", Font.PLAIN, 16);
 	private final Font SUBTITLE_FONT = new Font("Helvetica", Font.BOLD, 27);
-	private final Font STATS_FONT = new Font("Helvetica", Font.BOLD, 18);
+	private final Font STATS_FONT = new Font("Helvetica", Font.BOLD, 22);
 	private final Font DESC_STATS_FONT = new Font("Helvetica", Font.PLAIN, 14);
 	private final Font BUTTON_FONT = new Font("Helvetica", Font.BOLD, 18);
 
@@ -88,10 +88,10 @@ public class StatsGui extends JFrame {
 
 		progressPanel = new JPanel(new GridLayout(1, 4, 20, 20));
 		progressPanel.setBackground(Color.BLACK);
-		progressPanel.add(createStatsPanel("100", "partidas"));
-		progressPanel.add(createStatsPanel("100%", "de vitórias"));
-		progressPanel.add(createStatsPanel("100", "sequência"));
-		progressPanel.add(createStatsPanel("100", "melhor\nsequência"));
+		progressPanel.add(createStatsPanel(Integer.toString(stats.gamesPlayed), "partidas"));
+		progressPanel.add(createStatsPanel(Integer.toString(stats.victoryPercent) + "%", "de vitórias"));
+		progressPanel.add(createStatsPanel(Integer.toString(stats.streak), "sequência"));
+		progressPanel.add(createStatsPanel(Integer.toString(stats.bestStreak), "melhor\nsequência"));
 		statsPanel.add(progressPanel, BorderLayout.SOUTH);
 
 
@@ -155,10 +155,6 @@ public class StatsGui extends JFrame {
 		}
 
 		return panel;
-	}
-
-	private void writeStats() {
-
 	}
 
 }

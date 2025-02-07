@@ -72,6 +72,7 @@ public class WordleFrame extends JFrame {
 				if (attempt < CHANCES - 1 && !isWin) {
 					attempt++;
 				} else {
+					SwingUtilities.invokeLater(() -> {input.setText("WORDLE");});
 					input.setEnabled(false);
 					showStatsGui(isWin, "A palavra era " + guess.toUpperCase() + "!");
 				}
@@ -82,6 +83,7 @@ public class WordleFrame extends JFrame {
 		grid.resetGrid();
 		keyboard.resetKeyboard();
 		input.setEnabled(true);
+		input.cleared = false;
 	}
 
 	private void showStatsGui(boolean isWin, String answer) {
