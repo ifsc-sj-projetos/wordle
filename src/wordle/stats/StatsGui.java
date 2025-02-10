@@ -29,9 +29,9 @@ public class StatsGui extends JFrame {
 	private final Font DESC_STATS_FONT = new Font("Helvetica", Font.PLAIN, 14);
 	private final Font BUTTON_FONT = new Font("Helvetica", Font.BOLD, 18);
 
-	public StatsGui(boolean isWin, String answer, WordleFrame wordleFrame) {
+	public StatsGui(boolean isWin, String answer, WordleFrame wordleFrame, GameStats stats) {
 		this.wordleFrame = wordleFrame;
-		this.stats = new GameStats();
+		this.stats = stats;
 
 		ImageIcon favicon = new ImageIcon("resources/favicon.png");
 		setIconImage(favicon.getImage());
@@ -62,7 +62,7 @@ public class StatsGui extends JFrame {
 		feedbackLabel.setBackground(Color.BLACK);
 		feedbackLabel.setOpaque(true);
 
-		answerLabel = new JLabel("A palavra era WORDLE!", SwingConstants.CENTER);
+		answerLabel = new JLabel(answer, SwingConstants.CENTER);
 		answerLabel.setForeground(Color.WHITE);
 		answerLabel.setFont(ANSWER_FONT);
 		answerLabel.setBackground(Color.BLACK);

@@ -1,5 +1,7 @@
 package wordle.gui;
 
+import wordle.game.GuessResult;
+import wordle.stats.GameStats;
 import wordle.stats.StatsGui;
 
 import javax.swing.*;
@@ -11,6 +13,8 @@ public class WordleFrame extends JFrame {
 	// variáveis do jogo
 	private final int WORD_LENGTH = 5;
 	private final int CHANCES = 6;
+
+	private final GameStats stats;
 
 	// variáveis de conteúdo
 	private final Grid grid;
@@ -27,7 +31,8 @@ public class WordleFrame extends JFrame {
 	// TESTE
 	public int attempt = 0;
 
-	public WordleFrame() {
+	public WordleFrame(GameStats stats) {
+		this.stats = stats;
 
 		ImageIcon favicon = new ImageIcon("resources/favicon.png");
 		setIconImage(favicon.getImage());
@@ -53,18 +58,21 @@ public class WordleFrame extends JFrame {
 	}
 
 	public void handleGuess(String guess) {
-				Random random = new Random();
-				char[] color = {'x', '%', 'o', 'x', 'x'};
-				char[] feedback = {
-						color[random.nextInt(color.length)],
-						color[random.nextInt(color.length)],
-						color[random.nextInt(color.length)],
-						color[random.nextInt(color.length)],
-						color[random.nextInt(color.length)],
-				};
-				boolean[] bools = {true, false, false, false, false};
-				boolean isWin = bools[random.nextInt(bools.length)];
-				boolean chancesOver = attempt == CHANCES - 1;
+//				Random random = new Random();
+//				char[] color = {'x', '%', 'o', 'x', 'x'};
+//				char[] feedback = {
+//						color[random.nextInt(color.length)],
+//						color[random.nextInt(color.length)],
+//						color[random.nextInt(color.length)],
+//						color[random.nextInt(color.length)],
+//						color[random.nextInt(color.length)],
+//				};
+
+		boolean chancesOver = attempt == CHANCES - 1;
+		GuessResult result = new GuessResult(guess, "papel");
+		char[] feedback = result.feedback;
+		boolean isWin = result.isRight;
+
 
 		grid.updateGrid(guess, feedback, attempt, isWin);
 		keyboard.updateKeys(guess, feedback, attempt, isWin, chancesOver);
@@ -74,7 +82,8 @@ public class WordleFrame extends JFrame {
 				} else {
 					SwingUtilities.invokeLater(() -> {input.setText("WORDLE");});
 					input.setEnabled(false);
-					showStatsGui(isWin, "A palavra era " + guess.toUpperCase() + "!");
+					showStatsGui(isWin, "A palavra era " + guess.toUpperCase() + "!", stats);
+
 				}
 	}
 
@@ -86,13 +95,10 @@ public class WordleFrame extends JFrame {
 		input.cleared = false;
 	}
 
-	private void showStatsGui(boolean isWin, String answer) {
-		StatsGui statsGui = new StatsGui(isWin, answer, this);
-		statsGui.setVisible(true);
-	}
+	private void showStatsGui(boolean isWin, String answer, GameStats stats) {
+		stats.updateStats(isWin);
 
-	public static void main(String[] args) {
-		WordleFrame wordleGame = new WordleFrame();
-		wordleGame.setVisible(true);
+		StatsGui statsGui = new StatsGui(isWin, answer, this, stats);
+		statsGui.setVisible(true);
 	}
 }

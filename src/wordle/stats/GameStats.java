@@ -32,19 +32,18 @@ public class GameStats {
 
             gamesPlayed = json.getInt("gamesPlayed");
             gamesWon = json.getInt("gamesWon");
-            setVictoryPercent();
-            streak = json.getInt("currentStreak");
+
+            float percent = ((float) gamesWon / gamesPlayed) * 100;
+            victoryPercent = (int) percent;
+
+            streak = json.getInt("streak");
             bestStreak = json.getInt("bestStreak");
 
         } catch (IOException e) {
             gamesPlayed = gamesWon = streak = bestStreak = 0;
         }
     }
-
-    public void setVictoryPercent() {
-        float percent = ((float) gamesWon / gamesPlayed) * 100;
-        victoryPercent = (int) percent;
-    }
+    
     public void updateStats(boolean won) {
         gamesPlayed++;
         if (won) {

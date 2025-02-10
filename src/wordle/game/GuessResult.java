@@ -1,10 +1,13 @@
 package wordle.game;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class GuessResult {
     private String guess;
     private String answer;
-    private char[] feedback;
-    private boolean isRight;
+    public char[] feedback;
+    public boolean isRight;
 
     // construtor
     public GuessResult(String guess, String answer) {
@@ -12,19 +15,23 @@ public class GuessResult {
         this.answer = answer;
         this.feedback = setFeedback(); // Gera o feedback
         this.isRight = isRightAnswer(); // Verifica se a resposta está correta
+
+        System.out.println(Arrays.toString(feedback));
+        System.out.println(isRight);
     }
 
     // Método privado para gerar o feedback
     private char[] setFeedback() {
+
         char[] feedback = new char[5]; // Array para armazenar o feedback
         for (int i = 0; i < 5; i++) {
             char guessChar = guess.charAt(i);
             char answerChar = answer.charAt(i);
 
             if (guessChar == answerChar) {
-                feedback[i] = 'z'; // Letra correta na posição correta
+                feedback[i] = 'o'; // Letra correta na posição correta
             } else if (answer.contains(String.valueOf(guessChar))) {
-                feedback[i] = 'y'; // Letra correta na posição errada
+                feedback[i] = '%'; // Letra correta na posição errada
             } else {
                 feedback[i] = 'x'; // Letra não está na palavra correta
             }
@@ -35,7 +42,7 @@ public class GuessResult {
     //  verifica se todos os valores do array feedback indicam acertos 'z'.
     private Boolean isRightAnswer() {
         for (char v : feedback) {
-            if (v != 'z') {
+            if (v != 'o') {
                 return false; // se algum feedback não for 'z', a resposta está errada
             }
         }
