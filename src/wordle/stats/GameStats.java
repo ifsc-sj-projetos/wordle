@@ -6,7 +6,7 @@ import netscape.javascript.JSObject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.json.*;
+import org .json.*;
 
 import java.util.Random;
 

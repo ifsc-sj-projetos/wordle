@@ -1,6 +1,6 @@
 package wordle.game;
 
-import java.util.Arrays;
+import wordle.Util;
 
 public class GuessResult {
     private String guess;
@@ -11,12 +11,9 @@ public class GuessResult {
     // Construtor
     public GuessResult(String guess, String answer) {
         this.guess = guess;
-        this.answer = answer;
+        this.answer = Util.strip(answer);
         this.feedback = setFeedback();
-        this.isRight = isRightAnswer(); // verifica se a resposta está correta
-
-        System.out.println(Arrays.toString(feedback));
-        System.out.println(isRight); // confere se a resposta ta correta
+        this.isRight = isRightAnswer();
     }
 
 
@@ -62,9 +59,5 @@ public class GuessResult {
             }
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        GuessResult result = new GuessResult("lposp", "apple"); // Testando com um exemplo
     }
 }
