@@ -1,6 +1,5 @@
 package wordle.game;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class GuessResult {
@@ -9,53 +8,63 @@ public class GuessResult {
     public char[] feedback;
     public boolean isRight;
 
-    // construtor
+    // Construtor
     public GuessResult(String guess, String answer) {
         this.guess = guess;
         this.answer = answer;
-        this.feedback = setFeedback(); // Gera o feedback
-        this.isRight = isRightAnswer(); // Verifica se a resposta está correta
+        this.feedback = setFeedback();
+        this.isRight = isRightAnswer(); // verifica se a resposta está correta
 
         System.out.println(Arrays.toString(feedback));
-        System.out.println(isRight);
+        System.out.println(isRight); // confere se a resposta ta correta
     }
 
-    // Método privado para gerar o feedback
-    private char[] setFeedback() {
 
-        char[] feedback = new char[5]; // Array para armazenar o feedback
-        for (int i = 0; i < 5; i++) {
+    private char[] setFeedback() {
+        char[] feedback = new char[guess.length()]; // array para armazenar o feedback
+        boolean[] answerChecked = new boolean[answer.length()]; // array para marcar letras da resposta já verificadas
+
+        // letras corretas na posição certa (verde)
+        for (int i = 0; i < guess.length(); i++) {
             char guessChar = guess.charAt(i);
             char answerChar = answer.charAt(i);
 
             if (guessChar == answerChar) {
-                feedback[i] = 'o'; // Letra correta na posição correta
-            } else if (answer.contains(String.valueOf(guessChar))) {
-                feedback[i] = '%'; // Letra correta na posição errada
+                feedback[i] = 'o';
+                answerChecked[i] = true; // marcar como verificada
             } else {
-                feedback[i] = 'x'; // Letra não está na palavra correta
+                feedback[i] = 'x';
+            }
+        }
+        // letras corretas na posição errada (amarelo)
+        for (int i = 0; i < guess.length(); i++) {
+            if (feedback[i] != 'o') {
+                char guessChar = guess.charAt(i);
+
+
+                for (int j = 0; j < answer.length(); j++) {
+                    if (!answerChecked[j] && guessChar == answer.charAt(j)) {
+                        feedback[i] = '%';
+                        answerChecked[j] = true;
+                        break;
+                    }
+                }
             }
         }
         return feedback;
     }
 
-    //  verifica se todos os valores do array feedback indicam acertos 'z'.
-    private Boolean isRightAnswer() {
+    // verifica se a resposta está correta
+    private boolean isRightAnswer() {
         for (char v : feedback) {
             if (v != 'o') {
-                return false; // se algum feedback não for 'z', a resposta está errada
+                return false;
             }
         }
-        return true; // todos os feedbacks são 'z', a resposta está correta
+        return true;
     }
 
-    // Método getter para isRight
-    public Boolean getIsRightAnswer() {
-        return isRight;
-    }
-
-    // método getter para feedback
-    public char[] getFeedback() {
-        return feedback;
+    public static void main(String[] args) {
+        GuessResult result = new GuessResult("lposp", "apple"); // Testando com um exemplo
     }
 }
