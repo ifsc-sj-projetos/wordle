@@ -53,7 +53,9 @@ public class WordLoader {
 
         Random random = new Random();
 
-        return key.get(random.nextInt(key.size()));
+		String answer = key.get(random.nextInt(key.size()));
+		System.out.println(answer);
+        return answer;
     }
 
     private static class Word {

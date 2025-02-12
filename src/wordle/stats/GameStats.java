@@ -1,14 +1,8 @@
 package wordle.stats;
 
-import netscape.javascript.JSException;
-import netscape.javascript.JSObject;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import org .json.*;
-
-import java.util.Random;
 
 public class GameStats {
 
@@ -32,10 +26,7 @@ public class GameStats {
 
             gamesPlayed = json.getInt("gamesPlayed");
             gamesWon = json.getInt("gamesWon");
-
-            float percent = ((float) gamesWon / gamesPlayed) * 100;
-            victoryPercent = (int) percent;
-
+			victoryPercent = getVictoryPercent();
             streak = json.getInt("streak");
             bestStreak = json.getInt("bestStreak");
 
@@ -52,9 +43,12 @@ public class GameStats {
             if (streak > bestStreak) {
                 bestStreak = streak;
             }
+
         } else {
             streak = 0;
         }
+
+		victoryPercent = getVictoryPercent();
         saveStats();
     }
 
@@ -72,22 +66,10 @@ public class GameStats {
         }
     }
 
-    /*private void loadStats() {
+	private int getVictoryPercent() {
+		float percent = ((float) gamesWon / gamesPlayed) * 100;
+		return  (int) percent;
+	}
 
-        Random random = new Random();
-
-        gamesPlayed = random.nextInt(50);
-        gamesWon = random.nextInt(gamesPlayed);
-        float percent = ((float) gamesWon / gamesPlayed) * 100;
-        victoryPercent = (int) percent;
-
-        int a = random.nextInt(10);
-        int b = random.nextInt(10);
-
-        streak = Math.min(a, b);
-        bestStreak = Math.max(a, b);
-
-    }*/
-
-    }
+}
 
