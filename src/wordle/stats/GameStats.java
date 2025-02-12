@@ -18,6 +18,7 @@ public class GameStats {
     protected int streak;
     protected int bestStreak;
 
+    //Cria o caminho para o arquivo stats.json
     private static final String FILE_PATH = "resources/stats.json";
 
     public GameStats() {
@@ -26,6 +27,7 @@ public class GameStats {
 
     private void loadStats() {
 
+        //Acesso de objetos JSON para os parâmetros (Jogos jogados, Jogos vencidos, Sequência de vitórias e Melhor sequência)
         try {
             String content = new String(Files.readAllBytes(Paths.get(FILE_PATH)));
             JSONObject json = new JSONObject(content);
@@ -33,17 +35,20 @@ public class GameStats {
             gamesPlayed = json.getInt("gamesPlayed");
             gamesWon = json.getInt("gamesWon");
 
+            //Calcula a porcentagem de vitória do jogador
             float percent = ((float) gamesWon / gamesPlayed) * 100;
             victoryPercent = (int) percent;
 
             streak = json.getInt("streak");
             bestStreak = json.getInt("bestStreak");
 
+        //Zera as variáveis em caso de exceção
         } catch (IOException e) {
             gamesPlayed = gamesWon = streak = bestStreak = 0;
         }
     }
-    
+
+    //Atualiza os status de quantidade de jogos jogados e vencidos, sequência e melhor sequência caso se aplique
     public void updateStats(boolean won) {
         gamesPlayed++;
         if (won) {
@@ -68,26 +73,9 @@ public class GameStats {
             Files.write(Paths.get(FILE_PATH), json.toString().getBytes());
 
         } catch (IOException e) {
-            System.out.println("teste");
+            System.out.println("Erro na obtenção de status");
         }
     }
 
-    /*private void loadStats() {
-
-        Random random = new Random();
-
-        gamesPlayed = random.nextInt(50);
-        gamesWon = random.nextInt(gamesPlayed);
-        float percent = ((float) gamesWon / gamesPlayed) * 100;
-        victoryPercent = (int) percent;
-
-        int a = random.nextInt(10);
-        int b = random.nextInt(10);
-
-        streak = Math.min(a, b);
-        bestStreak = Math.max(a, b);
-
-    }*/
-
-    }
+}
 
