@@ -72,6 +72,7 @@ public class WordLoader {
         // atualiza o arquivo JSON com as modificações
         updateJsonFile();
 
+
         return selectedWord.getWord();
     }
 
