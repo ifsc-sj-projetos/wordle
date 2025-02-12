@@ -71,9 +71,9 @@ public class WordLoader {
 
         // atualiza o arquivo JSON com as modificações
         updateJsonFile();
-
-
-        return selectedWord.getWord();
+		String asnwer = selectedWord.getWord();
+		System.out.println(asnwer);
+        return asnwer;
     }
 
     // método para atualizar o arquivo JSON

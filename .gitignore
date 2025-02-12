@@ -4,8 +4,6 @@ out/
 !**/src/test/**/out/
 .idea
 *.iml
-resources/stats.json
-resources/words.json
 
 ### Eclipse ###
 .apt_generated
