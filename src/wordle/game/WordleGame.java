@@ -1,42 +1,50 @@
 package wordle.game;
 
-import wordle.stats.GameStats;
+import wordle.gui.*;
+import wordle.stats.*;
 
-import java.util.*;
+import javax.swing.*;
 
 public class WordleGame {
 
-    int attempts = 0;
-    int chances = 6;
-    String rightWord;
-    boolean gameOver;
-    private List<GuessResult> guessHistory;
+    public int attempt = 0;
+    private final int CHANCES = 6;
+    private String answer;
+    private final WordleFrame wordleFrame;
+    private final GameStats stats;
+    private final Input input;
 
-    public WordleGame(String rightWord) {
-        this.rightWord = rightWord.toUpperCase();
-        this.guessHistory = new ArrayList<>();
+    public WordleGame(String answer, WordleFrame wordleFrame, GameStats stats, Input input) {
+        this.answer = answer;
+        this.wordleFrame = wordleFrame;
+        this.stats = stats;
+        this.input = input;
     }
 
-    public void handleGuess(String guess) {
-
-        boolean chancesOver = attempts == chances - 1;
-        GuessResult result = new GuessResult(guess, rightWord);
-        guessHistory.add(result);
-
-        boolean isWin = result.isRight;
-
-        if (attempts < chances - 1 && !isWin) {
-            attempts++;
-
+    public boolean isGameOver(boolean isWin) {
+        if (attempt < CHANCES - 1 && !isWin) {
+            attempt++;
         } else {
-            gameOver = true;
+            return true;
         }
+        return false;
     }
 
-    private boolean endGame(GameStats stats, boolean isWin) {
+    public void endGame(boolean isWin) {
+        SwingUtilities.invokeLater(() -> {input.setText("WORDLE");});
+        input.setEnabled(false);
+
         stats.updateStats(isWin);
-        return gameOver;
+        String textStatus = "A palavra era " + answer.toUpperCase() + "!";
+
+        StatsGui statsGui = new StatsGui(isWin, textStatus, wordleFrame, stats);
+        statsGui.setVisible(true);
     }
+
+    public boolean getChancesOver() {
+        return attempt == CHANCES - 1;
+    }
+
 }
 
 
