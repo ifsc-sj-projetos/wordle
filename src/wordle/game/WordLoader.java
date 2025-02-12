@@ -9,35 +9,36 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 public class WordLoader {
-    private List<String> key;
+    private List<Word> words; // alterado para armazenar objetos do tipo Word
+    private String filePath; // caminho do arquivo
 
     public static void main(String[] args) {
-        String filePath = "/home/aluno/IdeaProjects/wordle-java/resources/words.json"; // Caminho corrigido
+        String filePath = "/home/aluno/IdeaProjects/wordle-java/resources/words.json"; 
         WordLoader wordLoader = new WordLoader(filePath);
         String randomWord = wordLoader.getRandomWord();
         System.out.println("Palavra aleatória: " + randomWord);
     }
 
     public WordLoader(String filePath) {
-        this.key = loadWords(filePath);
+        this.filePath = filePath;
+        this.words = loadWords(filePath);
     }
 
-    private List<String> loadWords(String filePath) {
-        List<String> loadedWords = new ArrayList<>();
+    private List<Word> loadWords(String filePath) {
+        List<Word> loadedWords = new ArrayList<>();
         try {
-            // Lê o conteúdo do arquivo JSON como uma String
+            // lê o conteúdo do arquivo JSON como uma String
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            JSONArray jsonArray = new JSONArray(content); // Converte a String para um JSONArray
+            JSONArray jsonArray = new JSONArray(content); // converte a String para um JSONArray
 
-            // Itera sobre o JSONArray e adiciona as palavras à lista
+            // itera sobre o JSONArray e adiciona as palavras à lista
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject wordObject = jsonArray.getJSONObject(i);
                 String word = wordObject.getString("key").toUpperCase();
                 boolean isValid = wordObject.getBoolean("value");
 
-                loadedWords.add(String.valueOf(new Word(word, isValid)));
+                loadedWords.add(new Word(word, isValid));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,15 +46,52 @@ public class WordLoader {
         return loadedWords;
     }
 
-
     public String getRandomWord() {
-        if (key.isEmpty()) {
+        if (words.isEmpty()) {
             throw new IllegalStateException("A lista de palavras está vazia. Verifique o arquivo JSON.");
         }
 
-        Random random = new Random();
+        // verifica a validade das palavras
+        List<Word> validWords = new ArrayList<>();
+        for (Word word : words) {
+            if (word.isValid()) {
+                validWords.add(word);
+            }
+        }
 
-        return key.get(random.nextInt(key.size()));
+        if (validWords.isEmpty()) {
+            throw new IllegalStateException("Não há mais palavras válidas disponíveis.");
+        }
+
+        Random random = new Random();
+        Word selectedWord = validWords.get(random.nextInt(validWords.size()));
+
+        // marca como false se a palavra for usada
+        selectedWord.setValid(false);
+
+        // atualiza o arquivo JSON com as modificações
+        updateJsonFile();
+
+        return selectedWord.getWord();
+    }
+
+    // método para atualizar o arquivo JSON
+    private void updateJsonFile() {
+        JSONArray updatedArray = new JSONArray();
+
+        // itera sobre as palavras e as coloca de volta no JSONArray com a nova informação de 'value'
+        for (Word word : words) {
+            JSONObject wordObject = new JSONObject();
+            wordObject.put("key", word.getWord());
+            wordObject.put("value", word.isValid());
+            updatedArray.put(wordObject);
+        }
+
+        try {
+            Files.write(Paths.get(filePath), updatedArray.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static class Word {
@@ -73,12 +111,14 @@ public class WordLoader {
             return isValid;
         }
 
-        // Sobrescreve o método toString para exibir a palavra
+        public void setValid(boolean valid) {
+            isValid = valid;
+        }
+
+        // sobrescreve o método toString para exibir a palavra
         @Override
         public String toString() {
-            return word; // Retorna a palavra como string
+            return word; 
         }
     }
-    }
-
-
+}
