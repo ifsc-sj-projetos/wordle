@@ -33,8 +33,8 @@ public class WordleFrame extends JFrame {
 		this.stats = stats;
 		this.wordLoader = wordLoader;
 		this.answer = this.wordLoader.getRandomWord();
-		this.input = new Input(this, WORD_LENGTH);
-		this.game = new WordleGame(this.answer, this, this.stats, input);
+		this.input = new Input(this, wordLoader, WORD_LENGTH);
+		this.game = new WordleGame(this, this.stats, input);
 
 		ImageIcon favicon = new ImageIcon("resources/favicon.png");
 		setIconImage(favicon.getImage());
@@ -68,7 +68,7 @@ public class WordleFrame extends JFrame {
 		keyboard.updateKeys(guess, feedback, game.attempt, isWin, game.getChancesOver());
 
 		if (game.isGameOver(isWin)) {
-			game.endGame(isWin);
+			game.endGame(isWin, answer);
 
 		}
 	}

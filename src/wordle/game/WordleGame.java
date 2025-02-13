@@ -9,15 +9,13 @@ public class WordleGame {
 
     public int attempt = 0;
     private final int CHANCES = 6;
-    private String answer;
 
     private static WordleFrame wordleFrame;
     private final GameStats stats;
     private final Input input;
     private static StatsGui statsGui;
 
-    public WordleGame(String answer, WordleFrame wordleFrame, GameStats stats, Input input) {
-        this.answer = answer;
+    public WordleGame(WordleFrame wordleFrame, GameStats stats, Input input) {
         this.wordleFrame = wordleFrame;
         this.stats = stats;
         this.input = input;
@@ -32,7 +30,7 @@ public class WordleGame {
         return false;
     }
 
-    public void endGame(boolean isWin) {
+    public void endGame(boolean isWin, String answer) {
         SwingUtilities.invokeLater(() -> {input.setText("WORDLE");});
         input.setEnabled(false);
 
@@ -44,7 +42,9 @@ public class WordleGame {
     }
 
     public static void ranOutOfWords() {
-        JOptionPane.showMessageDialog(null, "Não há mais palavras disponíveis.", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null,
+				"Não há mais palavras disponíveis.",
+				"ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
         wordleFrame.dispose();
         statsGui.dispose();
     }

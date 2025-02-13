@@ -1,6 +1,7 @@
 package wordle.gui;
 
 import wordle.Util;
+import wordle.game.WordLoader;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,18 +12,25 @@ public class Input extends JPanel {
 
 	private final int WORD_LENGTH;
 	private final WordleFrame frame;
+	public String[] words;
+
+	private final Timer blinkTimer;
+	private boolean isRed = false;
+	private int blinkCounter = 0;
 
 	private final JTextField inputField;
 	private final JLabel statusLabel;
 	private final Font statusFont = new Font("Helvetica", Font.PLAIN, 16);
 	private final Font inputFont = new Font("Helvetica", Font.BOLD, 52);
 
-	// valor que controla o placeholder do TextField.
 	protected boolean cleared = false;
 
-	public Input(WordleFrame frame, int WORD_LENGTH) {
+	public Input(WordleFrame frame, WordLoader wordLoader, int WORD_LENGTH) {
 		this.WORD_LENGTH = WORD_LENGTH;
 		this.frame = frame;
+		this.words = Util.toArray(wordLoader.words);
+
+		blinkTimer = new Timer(80, e -> toggleTextColor());
 
 		inputField = new JTextField("WORDLE", 10);
 		inputField.setHorizontalAlignment(JTextField.CENTER);
@@ -76,18 +84,23 @@ public class Input extends JPanel {
 			String input = inputField.getText().replace(" ", "");
 			boolean isAlpha = input.matches("[a-zA-Z]+");
 
+
+			if (!Util.containsWord(input, words) && isAlpha) {
+				startBlinking();
+				statusLabel.setText("Digite apenas palavras válidas.");
+				return;
+			}
+
 			if (input.length() == WORD_LENGTH && isAlpha) {
 				frame.handleGuess(Util.strip(input));
 				inputField.setText("");
+				statusLabel.setText("");
 			}
 
-			if (isAlpha) {
-				statusLabel.setText("");
-			} else {
+			if (!isAlpha) {
 				statusLabel.setText("Apenas letras são permitidas.");
 				inputField.setText("");
 			}
-
 
 		}
 	}
@@ -106,6 +119,28 @@ public class Input extends JPanel {
 	public void setText(String str) {
 		inputField.setText(str);
 		inputField.setForeground(Color.WHITE);
+	}
+
+	public void startBlinking() {
+		if (!blinkTimer.isRunning()) {
+			blinkTimer.start();
+		}
+	}
+
+	public void stopBlinking() {
+		blinkTimer.stop();
+		inputField.setForeground(Color.WHITE); // Reset text color
+	}
+
+	private void toggleTextColor() {
+		inputField.setForeground(isRed ? Color.WHITE : Color.RED);
+		isRed = !isRed;
+		if (blinkCounter < 5) {
+			blinkCounter++;
+		} else {
+			stopBlinking();
+			blinkCounter = 0;
+		}
 	}
 
 }
