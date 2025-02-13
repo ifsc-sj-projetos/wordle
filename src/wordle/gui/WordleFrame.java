@@ -16,6 +16,7 @@ public class WordleFrame extends JFrame {
 	private String answer;
 	private final WordLoader wordLoader;
 	private final GameStats stats;
+	private final WordleGame game;
 
 	// variáveis de conteúdo
 	private final Grid grid;
@@ -28,14 +29,12 @@ public class WordleFrame extends JFrame {
 	private final Color DARK_GRAY = new Color(75,75,75);
 	private final Color WINNER_GRAY = new Color(30,30,30);
 
-
-	// TESTE
-	public int attempt = 0;
-
 	public WordleFrame(GameStats stats, WordLoader wordLoader) {
 		this.stats = stats;
 		this.wordLoader = wordLoader;
 		this.answer = this.wordLoader.getRandomWord();
+		this.input = new Input(this, WORD_LENGTH);
+		this.game = new WordleGame(this.answer, this, this.stats, input);
 
 		ImageIcon favicon = new ImageIcon("resources/favicon.png");
 		setIconImage(favicon.getImage());
@@ -52,7 +51,6 @@ public class WordleFrame extends JFrame {
 		keyboard = new Keyboard();
 		keyboard.setColors(GREEN, YELLOW, DARK_GRAY, WINNER_GRAY);
 
-		input = new Input(this, WORD_LENGTH);
 
 		add(grid, BorderLayout.CENTER);
 		add(keyboard, BorderLayout.SOUTH);
@@ -62,38 +60,23 @@ public class WordleFrame extends JFrame {
 
 	public void handleGuess(String guess) {
 
-		boolean chancesOver = attempt == CHANCES - 1;
 		GuessResult result = new GuessResult(guess, Util.strip(answer));
 		char[] feedback = result.feedback;
 		boolean isWin = result.isRight;
 
+		grid.updateGrid(guess, feedback, game.attempt, isWin);
+		keyboard.updateKeys(guess, feedback, game.attempt, isWin, game.getChancesOver());
 
-		grid.updateGrid(guess, feedback, attempt, isWin);
-		keyboard.updateKeys(guess, feedback, attempt, isWin, chancesOver);
-
-		if (attempt < CHANCES - 1 && !isWin) {
-			attempt++;
-		} else {
-			SwingUtilities.invokeLater(() -> {input.setText("WORDLE");});
-			input.setEnabled(false);
-			showStatsGui(isWin, "A palavra era " + answer.toUpperCase() + "!", stats);
-
+		if (game.isGameOver(isWin)) {
+			game.endGame(isWin);
 		}
 	}
 
 	public void resetGame() {
-		attempt = 0;
+		game.attempt = 0;
 		grid.resetGrid();
 		keyboard.resetKeyboard();
 		input.setEnabled(true);
 		input.cleared = false;
-		answer = wordLoader.getRandomWord();
-	}
-
-	private void showStatsGui(boolean isWin, String answer, GameStats stats) {
-		stats.updateStats(isWin);
-
-		StatsGui statsGui = new StatsGui(isWin, answer, this, stats);
-		statsGui.setVisible(true);
 	}
 }
