@@ -1,20 +1,18 @@
 package wordle.game;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.nio.file.*;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
+import org.json.*;
 
 public class WordLoader {
     private List<Word> words; // alterado para armazenar objetos do tipo Word
     private String filePath; // caminho do arquivo
 
     public static void main(String[] args) {
-        String filePath = "/home/aluno/IdeaProjects/wordle-java/resources/words.json"; 
+        String filePath = "resources/words.json";
         WordLoader wordLoader = new WordLoader(filePath);
         String randomWord = wordLoader.getRandomWord();
         System.out.println("Palavra aleatória: " + randomWord);
@@ -26,6 +24,7 @@ public class WordLoader {
     }
 
     private List<Word> loadWords(String filePath) {
+
         List<Word> loadedWords = new ArrayList<>();
         try {
             // lê o conteúdo do arquivo JSON como uma String
@@ -40,13 +39,16 @@ public class WordLoader {
 
                 loadedWords.add(new Word(word, isValid));
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return loadedWords;
     }
 
     public String getRandomWord() {
+
         if (words.isEmpty()) {
             throw new IllegalStateException("A lista de palavras está vazia. Verifique o arquivo JSON.");
         }
@@ -60,6 +62,7 @@ public class WordLoader {
         }
 
         if (validWords.isEmpty()) {
+            WordleGame.ranOutOfWords();
             throw new IllegalStateException("Não há mais palavras válidas disponíveis.");
         }
 
@@ -73,11 +76,13 @@ public class WordLoader {
         updateJsonFile();
 		String asnwer = selectedWord.getWord();
 		System.out.println(asnwer);
+
         return asnwer;
     }
 
-    // método para atualizar o arquivo JSON
+    // metodo para atualizar o arquivo JSON
     private void updateJsonFile() {
+
         JSONArray updatedArray = new JSONArray();
 
         // itera sobre as palavras e as coloca de volta no JSONArray com a nova informação de 'value'
@@ -90,6 +95,7 @@ public class WordLoader {
 
         try {
             Files.write(Paths.get(filePath), updatedArray.toString().getBytes());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,7 +122,7 @@ public class WordLoader {
             isValid = valid;
         }
 
-        // sobrescreve o método toString para exibir a palavra
+        // sobrescreve o metodo toString para exibir a palavra
         @Override
         public String toString() {
             return word; 

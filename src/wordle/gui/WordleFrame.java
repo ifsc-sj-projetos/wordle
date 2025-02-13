@@ -69,6 +69,7 @@ public class WordleFrame extends JFrame {
 
 		if (game.isGameOver(isWin)) {
 			game.endGame(isWin);
+
 		}
 	}
 
@@ -78,5 +79,6 @@ public class WordleFrame extends JFrame {
 		keyboard.resetKeyboard();
 		input.setEnabled(true);
 		input.cleared = false;
+		answer = wordLoader.getRandomWord();
 	}
 }

@@ -1,4 +1,3 @@
-import wordle.Util;
 import wordle.game.WordLoader;
 import wordle.gui.WordleFrame;
 import wordle.stats.GameStats;

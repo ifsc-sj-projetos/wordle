@@ -10,9 +10,11 @@ public class WordleGame {
     public int attempt = 0;
     private final int CHANCES = 6;
     private String answer;
-    private final WordleFrame wordleFrame;
+
+    private static WordleFrame wordleFrame;
     private final GameStats stats;
     private final Input input;
+    private static StatsGui statsGui;
 
     public WordleGame(String answer, WordleFrame wordleFrame, GameStats stats, Input input) {
         this.answer = answer;
@@ -37,8 +39,14 @@ public class WordleGame {
         stats.updateStats(isWin);
         String textStatus = "A palavra era " + answer.toUpperCase() + "!";
 
-        StatsGui statsGui = new StatsGui(isWin, textStatus, wordleFrame, stats);
+        statsGui = new StatsGui(isWin, textStatus, wordleFrame, stats);
         statsGui.setVisible(true);
+    }
+
+    public static void ranOutOfWords() {
+        JOptionPane.showMessageDialog(null, "Não há mais palavras disponíveis.", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+        wordleFrame.dispose();
+        statsGui.dispose();
     }
 
     public boolean getChancesOver() {
