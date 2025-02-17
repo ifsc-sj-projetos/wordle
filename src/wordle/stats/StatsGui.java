@@ -108,10 +108,24 @@ public class StatsGui extends JFrame {
 
 
 		playAgainButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				wordleFrame.resetGame();
-				dispose();
+				playAgainAction();
+			}
+		});
+
+		playAgainButton.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				playAgainAction();
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
 			}
 		});
 
@@ -155,6 +169,11 @@ public class StatsGui extends JFrame {
 		}
 
 		return panel;
+	}
+
+	public void playAgainAction() {
+		wordleFrame.resetGame();
+		dispose();
 	}
 
 }

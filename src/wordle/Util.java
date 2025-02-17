@@ -1,21 +1,27 @@
 package wordle;
 
-public class Util {
+import wordle.game.WordLoader.Word;
 
-	static public void debug(Object value, boolean shouldPrint) {
-		if (shouldPrint) {
-			System.out.print(value);
-		}
-	}
-	static public void debugf(String format, boolean shouldPrint, Object... args) {
-		if (shouldPrint) {
-			System.out.printf(format, args);
-		}
-	}
-	static public void debugln(Object value, boolean shouldPrint) {
+import java.util.List;
+
+public class Util {
+	public static void debugln(Object value, boolean shouldPrint) {
 		if (shouldPrint) {
 			System.out.println(value);
 		}
+	}
+
+	public static String[] toArray(List<Word> arr) {
+		return arr.stream().map(Word::getWord).toArray(String[]::new);
+	}
+
+	public static boolean containsWord(String str, String[] wordArray) {
+		for (String word : wordArray) {
+			if (Util.strip(word).equals(Util.strip(str))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static String strip(String str) {

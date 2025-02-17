@@ -8,7 +8,7 @@ import java.util.List;
 import org.json.*;
 
 public class WordLoader {
-    private List<Word> words; // alterado para armazenar objetos do tipo Word
+    public List<Word> words; // alterado para armazenar objetos do tipo Word
     private String filePath; // caminho do arquivo
 
     public static void main(String[] args) {
@@ -101,7 +101,7 @@ public class WordLoader {
         }
     }
 
-    private static class Word {
+    public static class Word {
         private String word;
         private boolean isValid;
 
@@ -127,5 +127,6 @@ public class WordLoader {
         public String toString() {
             return word; 
         }
+
     }
 }
